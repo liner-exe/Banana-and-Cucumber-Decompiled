@@ -1,182 +1,166 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
-namespace TMPro.Examples
+public class TextMeshProFloatingText : MonoBehaviour
 {
-	public class TextMeshProFloatingText : MonoBehaviour
+	public Font TheFont;
+
+	private GameObject m_floatingText;
+
+	private TextMeshPro m_textMeshPro;
+
+	private TextMesh m_textMesh;
+
+	private Transform m_transform;
+
+	private Transform m_floatingText_Transform;
+
+	private Transform m_cameraTransform;
+
+	private Vector3 lastPOS = Vector3.zero;
+
+	private Quaternion lastRotation = Quaternion.identity;
+
+	public int SpawnType;
+
+	public bool IsTextObjectScaleStatic;
+
+	private static WaitForEndOfFrame k_WaitForEndOfFrame = new WaitForEndOfFrame();
+
+	private static WaitForSeconds[] k_WaitForSecondsRandom = new WaitForSeconds[20]
 	{
-		[CompilerGenerated]
-		private sealed class _003CDisplayTextMeshFloatingText_003Ed__16 : IEnumerator<object>, IEnumerator, IDisposable
+		new WaitForSeconds(0.05f),
+		new WaitForSeconds(0.1f),
+		new WaitForSeconds(0.15f),
+		new WaitForSeconds(0.2f),
+		new WaitForSeconds(0.25f),
+		new WaitForSeconds(0.3f),
+		new WaitForSeconds(0.35f),
+		new WaitForSeconds(0.4f),
+		new WaitForSeconds(0.45f),
+		new WaitForSeconds(0.5f),
+		new WaitForSeconds(0.55f),
+		new WaitForSeconds(0.6f),
+		new WaitForSeconds(0.65f),
+		new WaitForSeconds(0.7f),
+		new WaitForSeconds(0.75f),
+		new WaitForSeconds(0.8f),
+		new WaitForSeconds(0.85f),
+		new WaitForSeconds(0.9f),
+		new WaitForSeconds(0.95f),
+		new WaitForSeconds(1f)
+	};
+
+	private void Awake()
+	{
+		m_transform = base.transform;
+		m_floatingText = new GameObject(base.name + " floating text");
+		m_cameraTransform = Camera.main.transform;
+	}
+
+	private void Start()
+	{
+		if (SpawnType == 0)
 		{
-			private int _003C_003E1__state;
-
-			private object _003C_003E2__current;
-
-			public TextMeshProFloatingText _003C_003E4__this;
-
-			private float _003CCountDuration_003E5__2;
-
-			private float _003Cstarting_Count_003E5__3;
-
-			private float _003Ccurrent_Count_003E5__4;
-
-			private Vector3 _003Cstart_pos_003E5__5;
-
-			private Color32 _003Cstart_color_003E5__6;
-
-			private float _003Calpha_003E5__7;
-
-			private float _003CfadeDuration_003E5__8;
-
-			private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
-			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
-			}
-
-			private object System_002ECollections_002EIEnumerator_002ECurrent
-			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
-			}
-
-			[DebuggerHidden]
-			public _003CDisplayTextMeshFloatingText_003Ed__16(int _003C_003E1__state)
-			{
-			}
-
-			[DebuggerHidden]
-			private void System_002EIDisposable_002EDispose()
-			{
-			}
-
-			private bool MoveNext()
-			{
-				return false;
-			}
-
-			[DebuggerHidden]
-			private void System_002ECollections_002EIEnumerator_002EReset()
-			{
-			}
+			m_textMeshPro = m_floatingText.AddComponent<TextMeshPro>();
+			m_textMeshPro.rectTransform.sizeDelta = new Vector2(3f, 3f);
+			m_floatingText_Transform = m_floatingText.transform;
+			m_floatingText_Transform.position = m_transform.position + new Vector3(0f, 15f, 0f);
+			m_textMeshPro.alignment = TextAlignmentOptions.Center;
+			m_textMeshPro.color = new Color32((byte)Random.Range(0, 255), (byte)Random.Range(0, 255), (byte)Random.Range(0, 255), byte.MaxValue);
+			m_textMeshPro.fontSize = 24f;
+			m_textMeshPro.enableKerning = false;
+			m_textMeshPro.text = string.Empty;
+			m_textMeshPro.isTextObjectScaleStatic = IsTextObjectScaleStatic;
+			StartCoroutine(DisplayTextMeshProFloatingText());
 		}
-
-		[CompilerGenerated]
-		private sealed class _003CDisplayTextMeshProFloatingText_003Ed__15 : IEnumerator<object>, IEnumerator, IDisposable
+		else if (SpawnType == 1)
 		{
-			private int _003C_003E1__state;
-
-			private object _003C_003E2__current;
-
-			public TextMeshProFloatingText _003C_003E4__this;
-
-			private float _003CCountDuration_003E5__2;
-
-			private float _003Cstarting_Count_003E5__3;
-
-			private float _003Ccurrent_Count_003E5__4;
-
-			private Vector3 _003Cstart_pos_003E5__5;
-
-			private Color32 _003Cstart_color_003E5__6;
-
-			private float _003Calpha_003E5__7;
-
-			private float _003CfadeDuration_003E5__8;
-
-			private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
-			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
-			}
-
-			private object System_002ECollections_002EIEnumerator_002ECurrent
-			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
-			}
-
-			[DebuggerHidden]
-			public _003CDisplayTextMeshProFloatingText_003Ed__15(int _003C_003E1__state)
-			{
-			}
-
-			[DebuggerHidden]
-			private void System_002EIDisposable_002EDispose()
-			{
-			}
-
-			private bool MoveNext()
-			{
-				return false;
-			}
-
-			[DebuggerHidden]
-			private void System_002ECollections_002EIEnumerator_002EReset()
-			{
-			}
+			m_floatingText_Transform = m_floatingText.transform;
+			m_floatingText_Transform.position = m_transform.position + new Vector3(0f, 15f, 0f);
+			m_textMesh = m_floatingText.AddComponent<TextMesh>();
+			m_textMesh.font = Resources.Load<Font>("Fonts/ARIAL");
+			m_textMesh.GetComponent<Renderer>().sharedMaterial = m_textMesh.font.material;
+			m_textMesh.color = new Color32((byte)Random.Range(0, 255), (byte)Random.Range(0, 255), (byte)Random.Range(0, 255), byte.MaxValue);
+			m_textMesh.anchor = TextAnchor.LowerCenter;
+			m_textMesh.fontSize = 24;
+			StartCoroutine(DisplayTextMeshFloatingText());
 		}
-
-		public Font TheFont;
-
-		private GameObject m_floatingText;
-
-		private TextMeshPro m_textMeshPro;
-
-		private TextMesh m_textMesh;
-
-		private Transform m_transform;
-
-		private Transform m_floatingText_Transform;
-
-		private Transform m_cameraTransform;
-
-		private Vector3 lastPOS;
-
-		private Quaternion lastRotation;
-
-		public int SpawnType;
-
-		public bool IsTextObjectScaleStatic;
-
-		private static WaitForEndOfFrame k_WaitForEndOfFrame;
-
-		private static WaitForSeconds[] k_WaitForSecondsRandom;
-
-		private void Awake()
+		else
 		{
+			_ = SpawnType;
+			_ = 2;
 		}
+	}
 
-		private void Start()
+	public IEnumerator DisplayTextMeshProFloatingText()
+	{
+		float CountDuration = 2f;
+		float starting_Count = Random.Range(5f, 20f);
+		float current_Count = starting_Count;
+		Vector3 start_pos = m_floatingText_Transform.position;
+		Color32 start_color = m_textMeshPro.color;
+		float alpha = 255f;
+		float fadeDuration = 3f / starting_Count * CountDuration;
+		while (current_Count > 0f)
 		{
+			current_Count -= Time.deltaTime / CountDuration * starting_Count;
+			if (current_Count <= 3f)
+			{
+				alpha = Mathf.Clamp(alpha - Time.deltaTime / fadeDuration * 255f, 0f, 255f);
+			}
+			m_textMeshPro.text = ((int)current_Count).ToString();
+			m_textMeshPro.color = new Color32(start_color.r, start_color.g, start_color.b, (byte)alpha);
+			Transform floatingText_Transform = m_floatingText_Transform;
+			floatingText_Transform.position += new Vector3(0f, starting_Count * Time.deltaTime, 0f);
+			if (!TMPro_ExtensionMethods.Compare(lastPOS, m_cameraTransform.position, 1000) || !TMPro_ExtensionMethods.Compare(lastRotation, m_cameraTransform.rotation, 1000))
+			{
+				lastPOS = m_cameraTransform.position;
+				lastRotation = m_cameraTransform.rotation;
+				m_floatingText_Transform.rotation = lastRotation;
+				Vector3 vector = m_transform.position - lastPOS;
+				m_transform.forward = new Vector3(vector.x, 0f, vector.z);
+			}
+			yield return k_WaitForEndOfFrame;
 		}
+		yield return k_WaitForSecondsRandom[Random.Range(0, 19)];
+		m_floatingText_Transform.position = start_pos;
+		StartCoroutine(DisplayTextMeshProFloatingText());
+	}
 
-		[IteratorStateMachine(typeof(_003CDisplayTextMeshProFloatingText_003Ed__15))]
-		public IEnumerator DisplayTextMeshProFloatingText()
+	public IEnumerator DisplayTextMeshFloatingText()
+	{
+		float CountDuration = 2f;
+		float starting_Count = Random.Range(5f, 20f);
+		float current_Count = starting_Count;
+		Vector3 start_pos = m_floatingText_Transform.position;
+		Color32 start_color = m_textMesh.color;
+		float alpha = 255f;
+		float fadeDuration = 3f / starting_Count * CountDuration;
+		while (current_Count > 0f)
 		{
-			return null;
+			current_Count -= Time.deltaTime / CountDuration * starting_Count;
+			if (current_Count <= 3f)
+			{
+				alpha = Mathf.Clamp(alpha - Time.deltaTime / fadeDuration * 255f, 0f, 255f);
+			}
+			m_textMesh.text = ((int)current_Count).ToString();
+			m_textMesh.color = new Color32(start_color.r, start_color.g, start_color.b, (byte)alpha);
+			Transform floatingText_Transform = m_floatingText_Transform;
+			floatingText_Transform.position += new Vector3(0f, starting_Count * Time.deltaTime, 0f);
+			if (!TMPro_ExtensionMethods.Compare(lastPOS, m_cameraTransform.position, 1000) || !TMPro_ExtensionMethods.Compare(lastRotation, m_cameraTransform.rotation, 1000))
+			{
+				lastPOS = m_cameraTransform.position;
+				lastRotation = m_cameraTransform.rotation;
+				m_floatingText_Transform.rotation = lastRotation;
+				Vector3 vector = m_transform.position - lastPOS;
+				m_transform.forward = new Vector3(vector.x, 0f, vector.z);
+			}
+			yield return k_WaitForEndOfFrame;
 		}
-
-		[IteratorStateMachine(typeof(_003CDisplayTextMeshFloatingText_003Ed__16))]
-		public IEnumerator DisplayTextMeshFloatingText()
-		{
-			return null;
-		}
+		yield return k_WaitForSecondsRandom[Random.Range(0, 20)];
+		m_floatingText_Transform.position = start_pos;
+		StartCoroutine(DisplayTextMeshFloatingText());
 	}
 }
