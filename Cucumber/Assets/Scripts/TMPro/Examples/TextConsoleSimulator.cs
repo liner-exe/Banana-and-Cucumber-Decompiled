@@ -1,160 +1,92 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
-namespace TMPro.Examples
+public class TextConsoleSimulator : MonoBehaviour
 {
-	public class TextConsoleSimulator : MonoBehaviour
+	private TMP_Text m_TextComponent;
+
+	private bool hasTextChanged;
+
+	private void Awake()
 	{
-		[CompilerGenerated]
-		private sealed class _003CRevealCharacters_003Ed__7 : IEnumerator<object>, IEnumerator, IDisposable
+		m_TextComponent = base.gameObject.GetComponent<TMP_Text>();
+	}
+
+	private void Start()
+	{
+		StartCoroutine(RevealCharacters(m_TextComponent));
+	}
+
+	private void OnEnable()
+	{
+		TMPro_EventManager.TEXT_CHANGED_EVENT.Add((Action<UnityEngine.Object>)ON_TEXT_CHANGED);
+	}
+
+	private void OnDisable()
+	{
+		TMPro_EventManager.TEXT_CHANGED_EVENT.Remove((Action<UnityEngine.Object>)ON_TEXT_CHANGED);
+	}
+
+	private void ON_TEXT_CHANGED(UnityEngine.Object obj)
+	{
+		hasTextChanged = true;
+	}
+
+	private IEnumerator RevealCharacters(TMP_Text textComponent)
+	{
+		textComponent.ForceMeshUpdate();
+		TMP_TextInfo textInfo = textComponent.textInfo;
+		int totalVisibleCharacters = textInfo.characterCount;
+		int visibleCount = 0;
+		while (true)
 		{
-			private int _003C_003E1__state;
-
-			private object _003C_003E2__current;
-
-			public TMP_Text textComponent;
-
-			public TextConsoleSimulator _003C_003E4__this;
-
-			private TMP_TextInfo _003CtextInfo_003E5__2;
-
-			private int _003CtotalVisibleCharacters_003E5__3;
-
-			private int _003CvisibleCount_003E5__4;
-
-			private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
+			if (hasTextChanged)
 			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
+				totalVisibleCharacters = textInfo.characterCount;
+				hasTextChanged = false;
 			}
-
-			private object System_002ECollections_002EIEnumerator_002ECurrent
+			if (visibleCount > totalVisibleCharacters)
 			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
+				yield return new WaitForSeconds(1f);
+				visibleCount = 0;
 			}
-
-			[DebuggerHidden]
-			public _003CRevealCharacters_003Ed__7(int _003C_003E1__state)
-			{
-			}
-
-			[DebuggerHidden]
-			private void System_002EIDisposable_002EDispose()
-			{
-			}
-
-			private bool MoveNext()
-			{
-				return false;
-			}
-
-			[DebuggerHidden]
-			private void System_002ECollections_002EIEnumerator_002EReset()
-			{
-			}
+			textComponent.maxVisibleCharacters = visibleCount;
+			visibleCount++;
+			yield return null;
 		}
+	}
 
-		[CompilerGenerated]
-		private sealed class _003CRevealWords_003Ed__8 : IEnumerator<object>, IEnumerator, IDisposable
+	private IEnumerator RevealWords(TMP_Text textComponent)
+	{
+		textComponent.ForceMeshUpdate();
+		int totalWordCount = textComponent.textInfo.wordCount;
+		int totalVisibleCharacters = textComponent.textInfo.characterCount;
+		int counter = 0;
+		int visibleCount = 0;
+		while (true)
 		{
-			private int _003C_003E1__state;
-
-			private object _003C_003E2__current;
-
-			public TMP_Text textComponent;
-
-			private int _003CtotalWordCount_003E5__2;
-
-			private int _003CtotalVisibleCharacters_003E5__3;
-
-			private int _003Ccounter_003E5__4;
-
-			private int _003CvisibleCount_003E5__5;
-
-			private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
+			int num = counter % (totalWordCount + 1);
+			if (num == 0)
 			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
+				visibleCount = 0;
 			}
-
-			private object System_002ECollections_002EIEnumerator_002ECurrent
+			else if (num < totalWordCount)
 			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
+				visibleCount = textComponent.textInfo.wordInfo[num - 1].lastCharacterIndex + 1;
 			}
-
-			[DebuggerHidden]
-			public _003CRevealWords_003Ed__8(int _003C_003E1__state)
+			else if (num == totalWordCount)
 			{
+				visibleCount = totalVisibleCharacters;
 			}
-
-			[DebuggerHidden]
-			private void System_002EIDisposable_002EDispose()
+			textComponent.maxVisibleCharacters = visibleCount;
+			if (visibleCount >= totalVisibleCharacters)
 			{
+				yield return new WaitForSeconds(1f);
 			}
-
-			private bool MoveNext()
-			{
-				return false;
-			}
-
-			[DebuggerHidden]
-			private void System_002ECollections_002EIEnumerator_002EReset()
-			{
-			}
-		}
-
-		private TMP_Text m_TextComponent;
-
-		private bool hasTextChanged;
-
-		private void Awake()
-		{
-		}
-
-		private void Start()
-		{
-		}
-
-		private void OnEnable()
-		{
-		}
-
-		private void OnDisable()
-		{
-		}
-
-		private void ON_TEXT_CHANGED(UnityEngine.Object obj)
-		{
-		}
-
-		[IteratorStateMachine(typeof(_003CRevealCharacters_003Ed__7))]
-		private IEnumerator RevealCharacters(TMP_Text textComponent)
-		{
-			return null;
-		}
-
-		[IteratorStateMachine(typeof(_003CRevealWords_003Ed__8))]
-		private IEnumerator RevealWords(TMP_Text textComponent)
-		{
-			return null;
+			counter++;
+			yield return new WaitForSeconds(0.1f);
 		}
 	}
 }
