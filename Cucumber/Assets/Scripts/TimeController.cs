@@ -1,209 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using HeathenEngineering.SteamworksIntegration.API;
+using Steamworks;
 using UnityEngine;
 
 public class TimeController : MonoBehaviour
 {
-	[CompilerGenerated]
-	private sealed class _003CAddCommonItem_003Ed__23 : IEnumerator<object>, IEnumerator, IDisposable
-	{
-		private int _003C_003E1__state;
+	private List<int> itemIds = new List<int> { 98, 92, 84, 83, 82 };
 
-		private object _003C_003E2__current;
+	private List<int> middleItems = new List<int> { 81, 89, 85 };
 
-		public TimeController _003C_003E4__this;
-
-		private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		private object System_002ECollections_002EIEnumerator_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		[DebuggerHidden]
-		public _003CAddCommonItem_003Ed__23(int _003C_003E1__state)
-		{
-		}
-
-		[DebuggerHidden]
-		private void System_002EIDisposable_002EDispose()
-		{
-		}
-
-		private bool MoveNext()
-		{
-			return false;
-		}
-
-		[DebuggerHidden]
-		private void System_002ECollections_002EIEnumerator_002EReset()
-		{
-		}
-	}
-
-	[CompilerGenerated]
-	private sealed class _003CAddHiddenItem_003Ed__22 : IEnumerator<object>, IEnumerator, IDisposable
-	{
-		private int _003C_003E1__state;
-
-		private object _003C_003E2__current;
-
-		public TimeController _003C_003E4__this;
-
-		private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		private object System_002ECollections_002EIEnumerator_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		[DebuggerHidden]
-		public _003CAddHiddenItem_003Ed__22(int _003C_003E1__state)
-		{
-		}
-
-		[DebuggerHidden]
-		private void System_002EIDisposable_002EDispose()
-		{
-		}
-
-		private bool MoveNext()
-		{
-			return false;
-		}
-
-		[DebuggerHidden]
-		private void System_002ECollections_002EIEnumerator_002EReset()
-		{
-		}
-	}
-
-	[CompilerGenerated]
-	private sealed class _003CAddMiddleItem_003Ed__24 : IEnumerator<object>, IEnumerator, IDisposable
-	{
-		private int _003C_003E1__state;
-
-		private object _003C_003E2__current;
-
-		public TimeController _003C_003E4__this;
-
-		private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		private object System_002ECollections_002EIEnumerator_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		[DebuggerHidden]
-		public _003CAddMiddleItem_003Ed__24(int _003C_003E1__state)
-		{
-		}
-
-		[DebuggerHidden]
-		private void System_002EIDisposable_002EDispose()
-		{
-		}
-
-		private bool MoveNext()
-		{
-			return false;
-		}
-
-		[DebuggerHidden]
-		private void System_002ECollections_002EIEnumerator_002EReset()
-		{
-		}
-	}
-
-	[CompilerGenerated]
-	private sealed class _003CAddRareItem_003Ed__25 : IEnumerator<object>, IEnumerator, IDisposable
-	{
-		private int _003C_003E1__state;
-
-		private object _003C_003E2__current;
-
-		public TimeController _003C_003E4__this;
-
-		private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		private object System_002ECollections_002EIEnumerator_002ECurrent
-		{
-			[DebuggerHidden]
-			get
-			{
-				return null;
-			}
-		}
-
-		[DebuggerHidden]
-		public _003CAddRareItem_003Ed__25(int _003C_003E1__state)
-		{
-		}
-
-		[DebuggerHidden]
-		private void System_002EIDisposable_002EDispose()
-		{
-		}
-
-		private bool MoveNext()
-		{
-			return false;
-		}
-
-		[DebuggerHidden]
-		private void System_002ECollections_002EIEnumerator_002EReset()
-		{
-		}
-	}
-
-	private List<int> itemIds;
-
-	private List<int> middleItems;
-
-	private List<int> rareItemIds;
+	private List<int> rareItemIds = new List<int> { 86, 87 };
 
 	public GameObject _prefab;
 
@@ -223,37 +31,73 @@ public class TimeController : MonoBehaviour
 
 	private void Awake()
 	{
+		MaxTimeNormal = 1860f;
+		MaxTimeMiddle = 10860f;
+		MaxTimeRare = 72060f;
 	}
 
 	private void Start()
 	{
+		StartCoroutine(AddCommonItem());
+		StartCoroutine(AddMiddleItem());
+		StartCoroutine(AddRareItem());
+		Application.targetFrameRate = 30;
+		if (!PlayerPrefs.HasKey("FirstStart3"))
+		{
+			PlayerPrefs.SetInt("FirstStart3", 1);
+			StartCoroutine(AddHiddenItem());
+		}
 	}
 
-	[IteratorStateMachine(typeof(_003CAddHiddenItem_003Ed__22))]
 	private IEnumerator AddHiddenItem()
 	{
-		return null;
+		yield return new WaitForSeconds(15f);
+		AddItem(itemIds);
 	}
 
-	[IteratorStateMachine(typeof(_003CAddCommonItem_003Ed__23))]
 	private IEnumerator AddCommonItem()
 	{
-		return null;
+		while (true)
+		{
+			yield return new WaitForSeconds(MaxTimeNormal);
+			AddItem(itemIds);
+		}
 	}
 
-	[IteratorStateMachine(typeof(_003CAddMiddleItem_003Ed__24))]
 	private IEnumerator AddMiddleItem()
 	{
-		return null;
+		while (true)
+		{
+			yield return new WaitForSeconds(MaxTimeMiddle);
+			AddItem(middleItems);
+		}
 	}
 
-	[IteratorStateMachine(typeof(_003CAddRareItem_003Ed__25))]
 	private IEnumerator AddRareItem()
 	{
-		return null;
+		while (true)
+		{
+			yield return new WaitForSeconds(MaxTimeRare);
+			AddItem(rareItemIds);
+		}
 	}
 
 	private void AddItem(List<int> itemList)
 	{
+		Debug.Log("Online");
+		int index = Random.Range(0, itemList.Count);
+		int value = itemList[index];
+		SteamItemDef_t itemDef = new SteamItemDef_t(value);
+		try
+		{
+			Inventory.Client.AddPromoItem(itemDef, delegate
+			{
+				Debug.Log("Item added");
+			});
+		}
+		catch (Exception ex)
+		{
+			Debug.LogError("Exception while adding item: " + ex.Message);
+		}
 	}
 }
