@@ -7,5 +7,10 @@ public class ShopButton : MonoBehaviour
 
 	private void Start()
 	{
+		button = GetComponent<Button>();
+		button.onClick.AddListener(delegate
+		{
+			Application.OpenURL("https://store.steampowered.com/itemstore/3015610");
+		});
 	}
 }
