@@ -7,6 +7,11 @@ public class DiscordButton : MonoBehaviour
 
 	private void Start()
 	{
+		button = GetComponent<Button>();
+		button.onClick.AddListener(delegate
+		{
+			Application.OpenURL("discord://discord.gg/mxhmpqkh");
+		});
 	}
 
 	private void Update()
