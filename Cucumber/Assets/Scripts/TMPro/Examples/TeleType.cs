@@ -1,80 +1,42 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
-namespace TMPro.Examples
+public class TeleType : MonoBehaviour
 {
-	public class TeleType : MonoBehaviour
+	private string label01 = "Example <sprite=2> of using <sprite=7> <#ffa000>Graphics Inline</color> <sprite=5> with Text in <font=\"Bangers SDF\" material=\"Bangers SDF - Drop Shadow\">TextMesh<#40a0ff>Pro</color></font><sprite=0> and Unity<sprite=1>";
+
+	private string label02 = "Example <sprite=2> of using <sprite=7> <#ffa000>Graphics Inline</color> <sprite=5> with Text in <font=\"Bangers SDF\" material=\"Bangers SDF - Drop Shadow\">TextMesh<#40a0ff>Pro</color></font><sprite=0> and Unity<sprite=2>";
+
+	private TMP_Text m_textMeshPro;
+
+	private void Awake()
 	{
-		[CompilerGenerated]
-		private sealed class _003CStart_003Ed__4 : IEnumerator<object>, IEnumerator, IDisposable
+		m_textMeshPro = GetComponent<TMP_Text>();
+		m_textMeshPro.text = label01;
+		m_textMeshPro.enableWordWrapping = true;
+		m_textMeshPro.alignment = TextAlignmentOptions.Top;
+	}
+
+	private IEnumerator Start()
+	{
+		m_textMeshPro.ForceMeshUpdate();
+		int totalVisibleCharacters = m_textMeshPro.textInfo.characterCount;
+		int counter = 0;
+		while (true)
 		{
-			private int _003C_003E1__state;
-
-			private object _003C_003E2__current;
-
-			public TeleType _003C_003E4__this;
-
-			private int _003CtotalVisibleCharacters_003E5__2;
-
-			private int _003Ccounter_003E5__3;
-
-			private object System_002ECollections_002EGeneric_002EIEnumerator_003CSystem_002EObject_003E_002ECurrent
+			int num = counter % (totalVisibleCharacters + 1);
+			m_textMeshPro.maxVisibleCharacters = num;
+			if (num >= totalVisibleCharacters)
 			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
+				yield return new WaitForSeconds(1f);
+				m_textMeshPro.text = label02;
+				yield return new WaitForSeconds(1f);
+				m_textMeshPro.text = label01;
+				yield return new WaitForSeconds(1f);
 			}
-
-			private object System_002ECollections_002EIEnumerator_002ECurrent
-			{
-				[DebuggerHidden]
-				get
-				{
-					return null;
-				}
-			}
-
-			[DebuggerHidden]
-			public _003CStart_003Ed__4(int _003C_003E1__state)
-			{
-			}
-
-			[DebuggerHidden]
-			private void System_002EIDisposable_002EDispose()
-			{
-			}
-
-			private bool MoveNext()
-			{
-				return false;
-			}
-
-			[DebuggerHidden]
-			private void System_002ECollections_002EIEnumerator_002EReset()
-			{
-			}
-		}
-
-		private string label01;
-
-		private string label02;
-
-		private TMP_Text m_textMeshPro;
-
-		private void Awake()
-		{
-		}
-
-		[IteratorStateMachine(typeof(_003CStart_003Ed__4))]
-		private IEnumerator Start()
-		{
-			return null;
+			counter++;
+			yield return new WaitForSeconds(0.05f);
 		}
 	}
 }
