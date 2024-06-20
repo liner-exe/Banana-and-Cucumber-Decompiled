@@ -1,13 +1,17 @@
 using System;
+using TMPro;
 
-namespace TMPro
+[Serializable]
+public class TMP_DigitValidator : TMP_InputValidator
 {
-	[Serializable]
-	public class TMP_DigitValidator : TMP_InputValidator
+	public override char Validate(ref string text, ref int pos, char ch)
 	{
-		public override char Validate(ref string text, ref int pos, char ch)
+		if (ch >= '0' && ch <= '9')
 		{
-			return '\0';
+			text += ch;
+			pos++;
+			return ch;
 		}
+		return '\0';
 	}
 }
