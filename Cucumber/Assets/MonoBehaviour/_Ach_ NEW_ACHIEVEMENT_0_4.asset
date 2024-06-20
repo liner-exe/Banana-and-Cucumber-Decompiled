@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1228405576, guid: 091d896224f6e9a855fbff0c8bcf0706, type: 3}
+  m_Name: '[Ach] NEW_ACHIEVEMENT_0_4'
+  m_EditorClassIdentifier:
+  achievementId: NEW_ACHIEVEMENT_0_4
+  displayName: NEW_ACHIEVEMENT_NAME_0_4
+  displayDescription: NEW_ACHIEVEMENT_DESC_0_4
+  hidden: 1
